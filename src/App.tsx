@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AutocompleteInput } from "./components/maps/autocomplete-input";
 import { Directions } from "./components/maps/directions";
 import { useStore } from "./store/zustand";
+import { AdditionalPaths } from "./components/maps/additional-paths";
 
 function App() {
   const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
@@ -56,6 +57,7 @@ function App() {
           departurePoint={departurePlace}
           destinationPoint={arrivalPlace}
         />
+        <AdditionalPaths />
         <MapHandler place={departurePlace || arrivalPlace} />
       </div>
     </APIProvider>

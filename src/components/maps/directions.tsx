@@ -1,3 +1,4 @@
+import { useStore } from "@/store/zustand";
 import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 
@@ -17,9 +18,10 @@ export const Directions = ({
   const [directionsRenderer, setDirectionsRenderer] =
     useState<google.maps.DirectionsRenderer>();
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
-  const [routeIndex, setRouteIndex] = useState(0);
-  const selected = routes[routeIndex];
+  const selected = routes[0];
   const leg = selected?.legs[0];
+
+  const { places } = useStore();
 
   useEffect(() => {
     if (!routesLibrary || !map) return;
@@ -28,17 +30,31 @@ export const Directions = ({
 
     if (!destinationPoint || !departurePoint) return;
 
+    const waypoints: google.maps.DirectionsWaypoint[] = [];
+
+    if (places) {
+      places.map((placeResult) => {
+        const point: google.maps.DirectionsWaypoint = {
+          location: placeResult.geometry?.location,
+        };
+        waypoints.push(point);
+      });
+    }
+
     directionsService
       .route({
         travelMode: google.maps.TravelMode.DRIVING,
         destination: destinationPoint?.geometry?.location as google.maps.LatLng,
         origin: departurePoint?.geometry?.location as google.maps.LatLng,
+        waypoints,
       })
       .then((response) => {
+        console.log(response);
         directionsRenderer.setDirections(response);
         setRoutes(response.routes);
       });
   }, [
+    places,
     departurePoint,
     destinationPoint,
     directionsRenderer,
@@ -57,30 +73,6 @@ export const Directions = ({
     );
   }, [routesLibrary, map]);
 
-  // Add the following useEffect to make markers draggable
-  // useEffect(() => {
-  //   if (!directionsRenderer) return;
-
-  //   // Add the listener to update routes when directions change
-  //   const listener = directionsRenderer.addListener(
-  //     "directions_changed",
-  //     () => {
-  //       const result = directionsRenderer.getDirections();
-  //       if (result) {
-  //         setRoutes(result.routes);
-  //       }
-  //     },
-  //   );
-
-  //   return () => google.maps.event.removeListener(listener);
-  // }, [directionsRenderer]);
-
-  // Update direction route
-  useEffect(() => {
-    if (!directionsRenderer) return;
-    directionsRenderer.setRouteIndex(routeIndex);
-  }, [routeIndex, directionsRenderer]);
-
   if (!leg) return null;
 
   return (
@@ -93,15 +85,6 @@ export const Directions = ({
       <p>Duration: {leg.duration?.text}</p>
 
       <h2>Other Routes</h2>
-      <ul>
-        {routes.map((route, index) => (
-          <li key={route.summary}>
-            <button onClick={() => setRouteIndex(index)}>
-              {route.summary}
-            </button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
