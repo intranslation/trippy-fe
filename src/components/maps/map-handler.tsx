@@ -1,6 +1,6 @@
-import { useStore } from "@/store/zustand";
-import { useMap } from "@vis.gl/react-google-maps";
 import React, { useEffect } from "react";
+import { useStore } from "@/store/zustand";
+import { AdvancedMarker, Marker, useMap } from "@vis.gl/react-google-maps";
 
 interface Props {
   place: google.maps.places.PlaceResult | null;
@@ -26,9 +26,9 @@ const MapHandler = ({ place }: Props) => {
       map.panTo(coords);
       map.setZoom(15);
     }
-  }, [map, place]);
+  }, [map, place, userLocation]);
 
-  return null;
+  return <></>;
 };
 
 export default React.memo(MapHandler);

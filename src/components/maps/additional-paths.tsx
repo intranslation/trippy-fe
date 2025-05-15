@@ -1,62 +1,47 @@
-import { useState } from "react";
-import { Button } from "../ui/button";
 import { AutocompleteInput } from "./autocomplete-input";
 import { useStore } from "@/store/zustand";
+import { TrashIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
 
 export const AdditionalPaths = () => {
   const { places: placesInStore, addPlaces } = useStore();
-  const [places, setPlaces] = useState<Array<google.maps.places.PlaceResult>>(
-    [],
-  );
-  const [currPlace, setCurrPlace] =
-    useState<google.maps.places.PlaceResult | null>();
 
-  const onPlaceSelected = (place: google.maps.places.PlaceResult) => {
-    setCurrPlace(place);
+  const addToRoute = (place: google.maps.places.PlaceResult) => {
+    addPlaces(place);
   };
 
   return (
-    <div className="absolute top-100 right-5 flex flex-col gap-4 bg-white p-2">
-      <AutocompleteInput
-        onPlaceSelect={(place) => place && onPlaceSelected(place)}
-      />
-      <Button
-        disabled={!currPlace}
-        onClick={() =>
-          setPlaces((state) => (currPlace ? [...state, currPlace] : [...state]))
-        }
-      >
-        Salvar
-      </Button>
-      <Button
-        disabled={places.length === 0}
-        onClick={() => {
-          addPlaces([...placesInStore, ...places]);
-          console.log(places);
-          setPlaces([]);
-        }}
-      >
-        Add to the route
-      </Button>
-      <div className="flex flex-nowrap gap-2">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <label className="mt-2 text-sm">
+          Adicionar mais pontos de interesse
+        </label>
+        <AutocompleteInput
+          onPlaceSelect={(place) => {
+            if (place) {
+              // onPlaceSelected(place);
+              addToRoute(place);
+            }
+          }}
+          clearAfterSelect
+        />
+      </div>
+      <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
-          <small className="text-red-600">Places in store</small>
-          {placesInStore.map((place) => (
-            <p className="text-sm">
-              {place.formatted_address && place.formatted_address?.length > 20
-                ? `${place.formatted_address.substring(0, 20)}...`
-                : place.formatted_address}
-            </p>
-          ))}
-        </div>
-        <div className="flex flex-col gap-2">
-          <small className="text-blue-600">Places not in store</small>
-          {places.map((place) => (
-            <p className="text-sm">
-              {place.formatted_address && place.formatted_address?.length > 20
-                ? `${place.formatted_address.substring(0, 20)}...`
-                : place.formatted_address}
-            </p>
+          {placesInStore.map((place, index) => (
+            <div className="flex flex-nowrap items-center justify-between">
+              <p className="px-2 text-[.8rem]">{`${index + 1}º`}</p>
+              <p className="pr-2 text-sm">
+                {/* {place.formatted_address && place.formatted_address?.length > 20
+                  ? `${place.formatted_address.substring(0, 50)}...`
+                  : place.formatted_address} */}
+                {place.formatted_address && place.formatted_address}
+              </p>
+
+              <Button>
+                <TrashIcon fontSize={"2rem"} />
+              </Button>
+            </div>
           ))}
         </div>
       </div>

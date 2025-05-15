@@ -77,14 +77,14 @@ export const Directions = ({
 
   return (
     <div className="absolute top-100 left-0 bg-white">
-      <h2>{selected.summary}</h2>
+      {/* <h2>{selected.summary}</h2>
       <p>
         {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
       </p>
       <p>Distance: {leg.distance?.text}</p>
       <p>Duration: {leg.duration?.text}</p>
 
-      <h2>Other Routes</h2>
+      <h2>Other Routes</h2> */}
     </div>
   );
 };

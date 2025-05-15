@@ -4,12 +4,14 @@ import { Input } from "../ui/input";
 
 interface AutocompleteInputProps {
   placeholder?: string;
-  onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
+  onPlaceSelect: (place: google.maps.places.PlaceResult) => void;
+  clearAfterSelect?: boolean;
 }
 
 export const AutocompleteInput = ({
   placeholder,
   onPlaceSelect,
+  clearAfterSelect,
 }: AutocompleteInputProps) => {
   const map = useMap();
   const places = useMapsLibrary("places");
@@ -80,22 +82,28 @@ export const AutocompleteInput = ({
       const detailsRequestCallback = (
         placeDetails: google.maps.places.PlaceResult | null,
       ) => {
-        onPlaceSelect(placeDetails);
-        setPredictionResults([]);
-        setInputValue(placeDetails?.formatted_address ?? "");
-        setSessionToken(new places.AutocompleteSessionToken());
+        if (placeDetails) {
+          onPlaceSelect(placeDetails);
+          setPredictionResults([]);
+          setInputValue(
+            clearAfterSelect ? "" : (placeDetails?.formatted_address ?? ""),
+          );
+          setSessionToken(new places.AutocompleteSessionToken());
+        }
       };
 
       placesService?.getDetails(detailRequestOptions, detailsRequestCallback);
     },
-    [onPlaceSelect, places, placesService, sessionToken],
+    [onPlaceSelect, places, placesService, sessionToken, clearAfterSelect],
   );
+
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Input
         value={inputValue}
         onInput={(event: FormEvent<HTMLInputElement>) => onInputChange(event)}
         placeholder={placeholder}
+        className="w-full"
       />
       {predictionResults.length > 0 && (
         <ul className="absolute top-0 left-0 z-10 mt-[38px] bg-white">
