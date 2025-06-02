@@ -1,6 +1,6 @@
+import { Input } from "@/components/ui/input";
 import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Input } from "../ui/input";
 
 interface AutocompleteInputProps {
   placeholder?: string;

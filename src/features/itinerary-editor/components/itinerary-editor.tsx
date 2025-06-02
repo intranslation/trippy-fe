@@ -1,11 +1,11 @@
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
-import MapHandler from "./../components/maps/map-handler";
-import { AutocompleteInput } from "./../components/maps/autocomplete-input";
-import { Directions } from "./../components/maps/directions";
-import { AdditionalPaths } from "./../components/maps/additional-paths";
+import MapHandler from "./map-handler";
+import { AutocompleteInput } from "./autocomplete-input";
+import { Directions } from "./directions";
+import { AdditionalPaths } from "./additional-paths";
 
 import { useEffect, useState } from "react";
-import { useStore } from "@/store/zustand";
+import { useStore } from "@/store/maps";
 
 export default function ItineraryEditor() {
   const mapsKey = import.meta.env.VITE_GOOGLE_MAPS_KEY;
@@ -29,7 +29,7 @@ export default function ItineraryEditor() {
         });
       });
     }
-  }, []);
+  }, [setUserLocation]);
 
   const routeIsDefined = departurePlace && arrivalPlace;
   const routeNotConfigured = !departurePlace || !arrivalPlace;

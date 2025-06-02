@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { AutocompleteInput } from "./autocomplete-input";
-import { useStore } from "@/store/zustand";
+import { useStore } from "@/store/maps";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
 
 export const AdditionalPaths = () => {
   const { places: placesInStore, addPlaces } = useStore();
