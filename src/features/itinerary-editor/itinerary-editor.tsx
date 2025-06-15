@@ -1,8 +1,8 @@
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
-import MapHandler from "./map-handler";
-import { AutocompleteInput } from "./autocomplete-input";
-import { Directions } from "./directions";
-import { AdditionalPaths } from "./additional-paths";
+import MapHandler from "../../features/itinerary-editor/components/map-handler";
+import { AutocompleteInput } from "../../features/itinerary-editor/components/autocomplete-input";
+import { Directions } from "../../features/itinerary-editor/components/directions";
+import { AdditionalPaths } from "../../features/itinerary-editor/components/additional-paths";
 
 import { useEffect, useState } from "react";
 import { useStore } from "@/store/maps";
